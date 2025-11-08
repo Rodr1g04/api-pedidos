@@ -4,12 +4,10 @@ const path = require('path');
 const logger = require('morgan');
 const cors = require('cors');
 const connectDB = require('./config/database');
+const authRouter = require('./routes/authRouter');
+const pedidosRouter = require('./routes/pedidosRouter');
 
-// Conecta ao MongoDB
 connectDB();
-
-// Importa rotas
-const pedidosRouter = require('./routes/pedidosRouter'); // ✅ nome atualizado
 
 const app = express();
 
@@ -18,8 +16,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-
-// Rotas
-app.use('/api/pedidos', pedidosRouter); // ✅ nome atualizado
+app.use('/api/auth', authRouter);
+app.use('/api/pedidos', pedidosRouter);
 
 module.exports = app;

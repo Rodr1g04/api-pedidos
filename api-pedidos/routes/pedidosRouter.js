@@ -1,13 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const pedidoController = require('../controllers/pedidoController');
+const authMiddleware = require('../middleware/authMiddleware'); 
 
-// Rotas CRUD
+
 router.get('/', pedidoController.listarPedidos);
 router.get('/:id', pedidoController.buscarPedidoPorId);
-router.post('/', pedidoController.criarPedido);
-router.put('/:id', pedidoController.atualizarPedido);
-router.patch('/:id', pedidoController.atualizarPedido);
-router.delete('/:id', pedidoController.deletarPedido);
+
+router.post('/', authMiddleware, pedidoController.criarPedido);
+router.put('/:id', authMiddleware, pedidoController.atualizarPedido);
+router.patch('/:id', authMiddleware, pedidoController.atualizarPedido);
+router.delete('/:id', authMiddleware, pedidoController.deletarPedido);
 
 module.exports = router;
