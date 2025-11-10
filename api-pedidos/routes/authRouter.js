@@ -9,7 +9,7 @@ router.post('/login', (req, res) => {
     const token = jwt.sign(
       { username },
       process.env.JWT_SECRET,
-      { expiresIn: 60 } 
+      { expiresIn: 240 } 
     );
 
     return res.json({ message: 'Login bem-sucedido', token });
