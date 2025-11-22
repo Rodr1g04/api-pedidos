@@ -5,7 +5,7 @@ const authMiddleware = (req, res, next) => {
 
   // Verifica se o header existe e começa com "Bearer"
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'Token não fornecido' });
+    return res.status(403).json({ error: 'Token não fornecido' });
   }
 
   const token = authHeader.split(' ')[1]; // pega só o token
@@ -15,7 +15,7 @@ const authMiddleware = (req, res, next) => {
     req.user = decoded; // adiciona o usuário no req
     next(); // segue pra rota
   } catch (error) {
-    res.status(403).json({ error: 'Token inválido ou expirado' });
+    res.status(401).json({ error: 'Token inválido ou expirado' });
   }
 };
 
