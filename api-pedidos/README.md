@@ -1,103 +1,104 @@
-🧾 README.md — API RESTful de Pedidos com Autenticação JWT
-# 🛍️ API RESTful de Pedidos (Express + MongoDB + JWT)
+🧾 README.md — API RESTful de Pedidos (Express + MongoDB + JWT + Swagger)
+🛍️ API RESTful de Pedidos — v1
 
-Este projeto foi desenvolvido como parte de um trabalho prático para a disciplina de **Desenvolvimento de APIs RESTful**.  
-O objetivo é criar uma API completa utilizando o framework **Express.js**, integrada ao **MongoDB Atlas**,  
-com rotas **CRUD**, estrutura **MVC** e **autenticação JWT** para proteger as rotas de escrita.
+API desenvolvida como trabalho prático da disciplina de Desenvolvimento de APIs RESTful.
+O objetivo é construir uma API completa usando Node.js, Express, MongoDB (Mongoose), autenticação JWT, validações, testes automatizados e documentação com Swagger — seguindo o padrão REST + MVC.
 
----
+🚀 Tecnologias utilizadas
 
-## 🚀 Tecnologias utilizadas
+Node.js – Ambiente de execução
+Express.js – Framework para criação da API
+MongoDB Atlas – Banco de dados em nuvem
+Mongoose – Modelagem e validação dos dados
+JWT (jsonwebtoken) – Autenticação segura
+dotenv – Variáveis de ambiente
+morgan – Log de requisições
+cors – Controle de acesso
+Jest + Supertest – Testes automatizados
+Swagger UI + OpenAPI 3.1 – Documentação oficial da API
 
-- **Node.js** — Ambiente de execução JavaScript no servidor  
-- **Express.js** — Framework para criação da API REST  
-- **MongoDB Atlas** — Banco de dados não relacional em nuvem  
-- **Mongoose** — ODM para integração com o MongoDB  
-- **JWT (jsonwebtoken)** — Autenticação segura com tokens  
-- **dotenv** — Gerenciamento de variáveis de ambiente  
-- **morgan** — Logger de requisições HTTP  
-- **cors** — Liberação de acesso entre origens (CORS)
-
----
-
-## 📁 Estrutura do projeto
-
+📁 Estrutura do Projeto (versão final)
 api-pedidos/
 ├─ app.js
+├─ swagger.yaml
 ├─ .env
 ├─ package.json
-├─ config/
-│ └─ database.js
-├─ controllers/
-│ └─ pedidoController.js
-├─ middleware/
-│ └─ authMiddleware.js
-├─ models/
-│ └─ Pedido.js
-├─ routes/
-│ ├─ authRouter.js
-│ └─ pedidosRouter.js
-└─ public/
+│
+├─ v1/
+│  ├─ bin/
+│  ├─ config/
+│  │   └─ database.js
+│  ├─ controllers/
+│  │   └─ pedidoController.js
+│  ├─ middleware/
+│  │   └─ authMiddleware.js
+│  ├─ models/
+│  │   └─ Pedido.js
+│  ├─ routes/
+│  │   ├─ pedidosRouter.js
+│  │   └─ authRouter.js
+│  ├─ tests/
+│      └─ api.test.js
+│
+└─ README.md
 
 
----
+📌 Pontos importantes:
+✔️ Separação MVC
+✔️ Versão da API: /api/v1
+✔️ Swagger integrado em /api-docs
 
-## ⚙️ Configuração do ambiente
-
-### 1️⃣ Instalar dependências
-```bash
+⚙️ Configuração do Ambiente
+1️⃣ Instalar dependências
 npm install
 
 2️⃣ Criar arquivo .env
 
-Crie o arquivo .env na raiz do projeto com as seguintes variáveis:
+Crie na raiz:
 
 MONGODB_USER=seuUsuario
 MONGODB_PASS=suaSenha
 MONGODB_HOST=cluster0.xxxxx.mongodb.net
 MONGODB_DBNAME=pedidosdb
-JWT_SECRET=flamengo12
+JWT_SECRET=sua_chave_secreta
 
-🧠 Conexão com o banco (MongoDB Atlas)
+🧠 Conexão com o Banco (MongoDB Atlas)
 
-O arquivo config/database.js realiza a conexão com o MongoDB usando o Mongoose:
+Arquivo: v1/config/database.js
+Ao iniciar sua API, deve aparecer:
 
-const uri = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASS}@${process.env.MONGODB_HOST}/${process.env.MONGODB_DBNAME}?retryWrites=true&w=majority`;
-
-Quando o servidor é iniciado, aparece no console:
 ✅ MongoDB Atlas conectado com sucesso!
+📦 Modelo (Model) — Pedido
+Arquivo: v1/models/Pedido.js
 
-🧩 Entidade: Pedido
+Validações aplicadas com Mongoose:
 
-O modelo Pedido foi definido em models/Pedido.js com os seguintes campos obrigatórios:
-cliente: { type: String, required: true },
+cliente: { type: String, required: true, minlength: 3 },
 produto: { type: String, required: true },
-quantidade: { type: Number, required: true },
-valorTotal: { type: Number, required: true },
+quantidade: { type: Number, required: true, min: 1 },
+valorTotal: { type: Number, required: true, min: 1 },
 status: { type: String, enum: ['Pendente', 'Enviado', 'Entregue', 'Cancelado'], default: 'Pendente' },
 dataCriacao: { type: Date, default: Date.now }
 
+
+✔️ Tipos
+✔️ Obrigatoriedade
+✔️ Mínimo/máximo
+✔️ Enums
+✔️ Mensagens personalizadas
+
 🔄 Rotas CRUD (Pedidos)
-
-As rotas foram criadas em routes/pedidosRouter.js e seguem a convenção REST:
-
-Método	Rota	Descrição	Protegida (JWT)
-GET	/api/pedidos	Lista todos os pedidos	❌
-GET	/api/pedidos/:id	Busca um pedido por ID	❌
-POST	/api/pedidos	Cria um novo pedido	✅
-PUT	/api/pedidos/:id	Atualiza um pedido completo	✅
-PATCH	/api/pedidos/:id	Atualiza parcialmente um pedido	✅
-DELETE	/api/pedidos/:id	Deleta um pedido	✅
-
+Método	Rota	Função	JWT
+GET	/api/v1/pedidos	Lista pedidos	❌
+GET	/api/v1/pedidos/:id	Busca por ID	❌
+POST	/api/v1/pedidos	Cria pedido	✔️
+PUT	/api/v1/pedidos/:id	Atualiza pedido	✔️
+DELETE	/api/v1/pedidos/:id	Remove pedido	✔️
 🔐 Autenticação JWT
+Login
+POST /api/v1/auth/login
 
-A autenticação foi implementada para proteger as rotas de escrita (POST, PUT, PATCH e DELETE).
-
-Rota de login:
-
-POST /api/auth/login
-
-Exemplo de requisição:
+Exemplo:
 {
   "username": "admin",
   "password": "12345"
@@ -106,19 +107,27 @@ Exemplo de requisição:
 Resposta:
 {
   "message": "Login bem-sucedido",
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6..."
+  "token": "eyJhbGciOiJIUzI1NiIs..."
 }
-Use o token retornado nas rotas protegidas através do header:
-Authorization: Bearer SEU_TOKEN_AQUI
+
+Enviar token no header:
+Authorization: Bearer SEU_TOKEN
+
+
+Middleware em:
+v1/middleware/authMiddleware.js
 
 🧱 Exemplo de requisição protegida
-
-POST → http://localhost:3000/api/pedidos
+POST /api/v1/pedidos
 
 Headers:
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+Authorization: Bearer SEU_TOKEN
 Content-Type: application/json
+
+
 Body:
+
 {
   "cliente": "Rodrigo Araújo",
   "produto": "Teclado Mecânico RGB",
@@ -126,7 +135,8 @@ Body:
   "valorTotal": 200
 }
 
-✅ Resposta:
+
+Resposta:
 
 {
   "_id": "690f0db4a7936c842fcef6bb",
@@ -135,53 +145,71 @@ Body:
   "quantidade": 1,
   "valorTotal": 200,
   "status": "Pendente",
-  "dataCriacao": "2025-11-08T09:30:28.098Z",
-  "__v": 0
+  "dataCriacao": "2025-11-08T09:30:28.098Z"
 }
 
-🧠 Estrutura MVC
-
-O projeto segue o padrão Model–View–Controller:
-
+📐 Arquitetura — MVC
 Camada	Função	Local
-Model	Define a estrutura dos dados e integra com o banco	models/Pedido.js
-Controller	Contém a lógica de negócio (CRUD)	controllers/pedidoController.js
-Router	Define os endpoints e direciona para o controller	routes/pedidosRouter.js
-Middleware	Verifica o token JWT	middleware/authMiddleware.js
-Config	Responsável pela conexão com o MongoDB	config/database.js
-🧪 Testes de rotas
+Model	Estrutura dos dados	/models/Pedido.js
+Controller	Lógica de negócio (CRUD)	/controllers/pedidoController.js
+Router	Define rotas REST	/routes/pedidosRouter.js
+Middleware	JWT	/middleware/authMiddleware.js
+Config	Conexão com DB	/config/database.js
+🧪 Testes Automatizados (Jest + Supertest)
 
-As rotas foram testadas utilizando o Postman com o seguinte fluxo:
+Rodar os testes:
 
-POST /api/auth/login → gera token JWT
+npm test
 
-POST /api/pedidos → cria um pedido (enviando o token)
 
-GET /api/pedidos → lista pedidos
+Cobertura de testes:
 
-PUT /api/pedidos/:id → atualiza pedido
+✔️ Login
+✔️ Pedidos CRUD
+✔️ Validadores Mongoose
+✔️ Status HTTP corretos
+✔️ JWT funcionando
 
-DELETE /api/pedidos/:id → remove pedido
+📄 Documentação Oficial – Swagger
+
+Acesse:
+
+👉 http://localhost:3000/api-docs
+
+Gerado a partir de:
+
+swagger.yaml
+
+
+Documentação inclui:
+
+✔️ Todos os endpoints
+✔️ Exemplos de requisições
+✔️ Respostas com códigos HTTP
+✔️ Schemas
+✔️ JWT Bearer integrado
+✔️ Versionamento da API
 
 🧰 Scripts úteis
-Rodar o servidor
-
-node app.js
-
-ou, se estiver usando nodemon:
-
+Rodar em desenvolvimento:
 npm run dev
 
-✅ Requisitos atendidos
+Rodar em produção:
+npm start
+
+✅ Checklist de Requisitos Atendidos
 Requisito	Descrição	Status
-(a)	API RESTful com Express e entidade escolhida	✅
-(b)	Rotas CRUD com respostas HTTP adequadas	✅
-(c)	Separação em controllers e models	✅
-(e)	Autenticação JWT para proteger rotas de escrita	✅
+(a)	API RESTful completa com Express	✔️
+(b)	CRUD com respostas HTTP adequadas	✔️
+(c)	Separação em Controllers e Models	✔️
+(e)	Autenticação JWT	✔️
+(f)	Validações de entrada e regras	✔️
+(g)	Boas práticas REST + versionamento	✔️
+(h)	Testes unitários	✔️
+(i)	Documentação Swagger	✔️
+(k)	README completo	✔️
 👨‍💻 Autor
 
 Rodrigo Araújo
-Desenvolvedor e estudante de Análise e Desenvolvimento de Sistemas (IESB)
-
-Projeto criado com o objetivo de aplicar os conceitos de APIs RESTful, Express.js, MongoDB e autenticação JWT.
-
+Estudante de Análise e Desenvolvimento de Sistemas (IESB)
+Projeto desenvolvido com foco em APIs RESTful, boas práticas e segurança.
