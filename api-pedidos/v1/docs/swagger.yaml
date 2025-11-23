@@ -3,19 +3,15 @@ info:
   title: API de Pedidos
   description: Documentação oficial da API RESTful de pedidos utilizando Express, Mongoose e autenticação JWT.
   version: 1.0.0
-
 servers:
   - url: http://localhost:3000/api/v1
     description: Ambiente de desenvolvimento
-
 tags:
   - name: autenticação
     description: Rotas de login e geração de token JWT
   - name: pedidos
     description: CRUD de pedidos
-
 paths:
-
   /auth/login:
     post:
       summary: Realiza login e retorna um token JWT
@@ -53,7 +49,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Erro'
-                
   /pedidos:
     get:
       summary: Lista todos os pedidos
@@ -143,7 +138,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Erro'
-
     put:
       summary: Atualiza um pedido existente
       tags:
@@ -192,7 +186,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Erro'
-
     delete:
       summary: Deleta um pedido pelo ID
       tags:
@@ -233,11 +226,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Erro'
-
 components:
-
   schemas:
-
     Pedido:
       type: object
       properties:
@@ -276,7 +266,6 @@ components:
         status:
           type: string
           example: Pendente
-
     Erro:
       type: object
       properties:
@@ -286,7 +275,6 @@ components:
         detalhes:
           type: string
           example: Campo cliente é obrigatório
-
   securitySchemes:
     token_jwt:
       type: http
