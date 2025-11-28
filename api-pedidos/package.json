@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "start": "node ./v1/bin/www",
-    "dev": "nodemon ./v1/bin/www",
+    "dev": "nodemon -e yaml,js ./v1/bin/www",
     "test": "jest --watchAll"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
     "debug": "~2.6.9",

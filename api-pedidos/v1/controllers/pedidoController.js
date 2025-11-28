@@ -1,6 +1,5 @@
 const Pedido = require('../models/Pedido');
 
-// Criar pedido
 exports.criarPedido = async (req, res) => {
   try {
     const novoPedido = new Pedido(req.body);
@@ -11,7 +10,6 @@ exports.criarPedido = async (req, res) => {
   }
 };
 
-// Listar todos
 exports.listarPedidos = async (req, res) => {
   try {
     const pedidos = await Pedido.find();
@@ -21,7 +19,7 @@ exports.listarPedidos = async (req, res) => {
   }
 };
 
-// Buscar por ID
+
 exports.buscarPedidoPorId = async (req, res) => {
   try {
     const pedido = await Pedido.findById(req.params.id);
@@ -32,7 +30,6 @@ exports.buscarPedidoPorId = async (req, res) => {
   }
 };
 
-// Atualizar pedido
 exports.atualizarPedido = async (req, res) => {
   try {
     const atualizado = await Pedido.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
@@ -43,7 +40,6 @@ exports.atualizarPedido = async (req, res) => {
   }
 };
 
-// Deletar pedido
 exports.deletarPedido = async (req, res) => {
   try {
     const deletado = await Pedido.findByIdAndDelete(req.params.id);

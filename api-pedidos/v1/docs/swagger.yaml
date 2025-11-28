@@ -7,16 +7,16 @@ servers:
   - url: http://localhost:3000/api/v1
     description: Ambiente de desenvolvimento
 tags:
-  - name: autenticação
-    description: Rotas de login e geração de token JWT
+  - name: usuarios
+    description: Rotas de usuários e autenticação JWT
   - name: pedidos
     description: CRUD de pedidos
 paths:
-  /auth/login:
+  /usuarios:
     post:
-      summary: Realiza login e retorna um token JWT
+      summary: Cria um novo usuário
       tags:
-        - autenticação
+        - usuarios
       requestBody:
         required: true
         content:
@@ -26,7 +26,48 @@ paths:
               properties:
                 username:
                   type: string
-                  example: admin
+                  example: rodrigo
+                email:
+                  type: string
+                  example: rodrigo@example.com
+                password:
+                  type: string
+                  example: 12345
+      responses:
+        201:
+          description: Usuário criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        400:
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        409:
+          description: Email já cadastrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+
+  /usuarios/login:
+    post:
+      summary: Realiza login e retorna um token JWT
+      tags:
+        - usuarios
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: admin@example.com
                 password:
                   type: string
                   example: 12345
@@ -40,7 +81,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: Login bem-sucedido
+                    example: Login realizado com sucesso
                   token:
                     type: string
         401:
@@ -49,6 +90,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Erro'
+
+
+  #########################
+  # ROTAS DE PEDIDOS
+  #########################
+
   /pedidos:
     get:
       summary: Lista todos os pedidos
@@ -108,6 +155,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Erro'
 
+
   /pedidos/{pedidoId}:
     get:
       summary: Busca um pedido pelo ID
@@ -138,6 +186,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Erro'
+
     put:
       summary: Atualiza um pedido existente
       tags:
@@ -186,6 +235,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Erro'
+
     delete:
       summary: Deleta um pedido pelo ID
       tags:
@@ -226,14 +276,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Erro'
+
+
 components:
   schemas:
+
+    Usuario:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "691234abcd9876ef541234cd"
+        username:
+          type: string
+          example: rodrigo
+        email:
+          type: string
+          example: rodrigo@example.com
     Pedido:
       type: object
       properties:
         _id:
           type: string
-          example: "690f0db4a7936c842fcef6bb"
         cliente:
           type: string
         produto:
@@ -266,6 +330,7 @@ components:
         status:
           type: string
           example: Pendente
+
     Erro:
       type: object
       properties:
@@ -275,6 +340,7 @@ components:
         detalhes:
           type: string
           example: Campo cliente é obrigatório
+
   securitySchemes:
     token_jwt:
       type: http

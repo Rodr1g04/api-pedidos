@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const pedidoSchema = new mongoose.Schema({
   cliente: {
@@ -33,16 +34,24 @@ const pedidoSchema = new mongoose.Schema({
 
   status: {
     type: String,
-    enum: {
-      values: ["Pendente", "Enviado", "Entregue", "Cancelado"],
-      message: "Status inválido. apenas: Pendente, Enviado, Entregue ou Cancelado"
-    },
+    enum: ["Pendente", "Enviado", "Entregue", "Cancelado"],
     default: "Pendente"
   },
 
   dataCriacao: {
     type: Date,
-    default: Date.now }
+    default: Date.now
+  }
+});
+
+
+pedidoSchema.pre('save', function (next) {
+  if (!this.isModified('cliente')) return next();
+
+  const salt = bcrypt.genSaltSync(10);
+  this.cliente = bcrypt.hashSync(this.cliente, salt);
+
+  next();
 });
 
 module.exports = mongoose.model('Pedido', pedidoSchema);
